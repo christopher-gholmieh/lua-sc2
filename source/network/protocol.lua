@@ -175,7 +175,7 @@ function Protocol:receive()
     while true do
         --< Variables (Assignment):
         --< Payload:
-        local payload, code = self.socket:receive_frame()
+        local payload, code = self.socket:receive()
 
         if not payload then
             --< Logger:
@@ -196,7 +196,7 @@ function Protocol:receive()
 
         --< Logic:
         if code == 0x09 then
-            self.socket:send_frame(payload, 0xA)
+            self.socket:send(payload, 0xA)
         elseif code == 0x02 then
             --< Debug:
             if self.options.debug then
