@@ -29,7 +29,7 @@ function Observation.construct_observation(observation_response)
         supply = information.player_common.food_used;
 
         --< Workers:
-        idle_workers = information.player_common.idle_worker_count;
+        idle_worker_count = information.player_common.idle_worker_count;
     }
 
     --< Self:
