@@ -26,7 +26,7 @@ function Protocol.build_default_codec()
 
     --< Variables (Assignment):
     --< Success:
-    local success, error = pcall(Protoc.loadfile, "s2clientprotocol/sc2api.proto")
+    local success, error = pcall(Protoc.loadfile, Protoc, "s2clientprotocol/sc2api.proto")
 
     if not success then
         return nil, "[!] Failed to load s2clientprotocol/sc2api.proto: " .. tostring(error)
@@ -136,7 +136,7 @@ function Protocol:send(request)
 
     --< Variables (Assignment):
     --< Payload:
-    local payload, error = self.codec:encode("Sc2APIProtocol.Request", request)
+    local payload, error = self.codec:encode("SC2APIProtocol.Request", request)
 
     if not payload then
         --< Logger:
@@ -147,7 +147,7 @@ function Protocol:send(request)
     end
 
     --< Success:
-    local success = self.socket:send_frame(payload, 0x02)
+    local success = self.socket:send(payload, 0x02)
 
     if not success then
         --< Logger:
