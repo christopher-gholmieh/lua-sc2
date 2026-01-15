@@ -12,8 +12,11 @@ local Races = {
 	--< Terran:
 	TERRAN = Enumeration.new("TERRAN", 2);
 
+	--< Random:
+	RANDOM = Enumeration.new("RANDOM", 3);
+
 	--< Zerg:
-	ZERG = Enumeration.new("ZERG", 3);
+	ZERG = Enumeration.new("ZERG", 4);
 }
 
 --< Races:
