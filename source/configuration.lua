@@ -2,16 +2,16 @@
 --< Variables (Assignment):
 
 --< Enumerations:
-local Races = require("source.enumerations.races")
+local Races = require("source.enumerations.race")
 
 --< Configuration:
 local Configuration = {
 	--< StarCraft II:
 	--< Race:
-	RACE = Races.PROTOSS;
+	RACE = Races.TERRAN;
 
 	--< Name:
-	NAME = "";
+	NAME = "Bot";
 
 
 	--< Network:

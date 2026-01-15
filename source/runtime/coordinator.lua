@@ -1,6 +1,9 @@
 --< Written by: Christopher Gholmieh
 --< Variables (Assignment):
 
+--< Configuration:
+local Configuration = require("source.configuration")
+
 --< Enumerations:
 local Difficulty = require("source.enumerations.difficulty")
 local Player = require("source.enumerations.player")
@@ -32,7 +35,7 @@ end
 function Coordinator.next_identifier()
     --< Variables (Assignment):
     --< Identifier:
-    Coordinator.identifier = Coordinator + 1
+    Coordinator.identifier = Coordinator.identifier + 1
 
     --< Logic:
     return Coordinator.identifier - 1
@@ -99,13 +102,13 @@ function Coordinator.run_game(map_path)
         --< Game:
         join_game = {
             --< Race:
-            race = Race.PROTOSS.value,
+            race = Configuration.RACE.value,
 
             --< Options:
             options = { raw = true };
 
             --< Name:
-            player_name = "Bot";
+            player_name = Configuration.NAME;
         }
     })
 
