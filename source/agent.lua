@@ -9,11 +9,24 @@ function Agent.new()
 	--< Variables (Assignment):
 	--< Self:
 	local Self = {
+		--< Iteration:
+		iteration = 0;
+
 		--< Minerals:
-		minerals = 0;
+		minerals = 50;
 
 		--< Vespene:
 		vespene = 0;
+
+		--< Supply:
+		supply_workers = 12;
+		supply_army = 0;
+
+		supply_cap = 15;
+		supply = 12;
+
+		--< Workers:
+		idle_worker_count = 0;
 	}
 
 	--< Logic:
