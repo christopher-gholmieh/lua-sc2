@@ -27,6 +27,9 @@ function Agent.new()
 
 		--< Workers:
 		idle_worker_count = 0;
+
+		--< Actions:
+		actions = {};
 	}
 
 	--< Logic:
@@ -69,6 +72,9 @@ function Agent:_update(observation)
 
 	--< Workers:
 	self.idle_worker_count = observation.idle_worker_count
+
+	--< Actions:
+	self.actions = {}
 end
 
 --< Agent:

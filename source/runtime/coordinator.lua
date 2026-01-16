@@ -45,7 +45,24 @@ function Coordinator.next_identifier()
     return Coordinator.identifier - 1
 end
 
-function Coordinator.run_game(map_path)
+function Coordinator.run_game(map_path, agent)
+    --< Validation:
+    if not map_path then
+        --< Logger:
+        Logger.log_error("[!] Map path supplied to run_game is nil!")
+
+        --< Logic:
+        return
+    end
+
+    if not agent then
+         --< Logger:
+        Logger.log_error("[!] Agent supplied to run_game is nil!")
+
+        --< Logic:
+        return
+    end
+
     --< Variables (Assignment):
     --< Socket:
     local socket = Socket.new()
@@ -72,7 +89,10 @@ function Coordinator.run_game(map_path)
             --< Setup:
             player_setup = {
                 --< Player:
-                { type = Player.PARTICIPANT.value };
+                { 
+                    --< Type:
+                    type = Player.PARTICIPANT.value;
+                };
 
                 --< Computer:
                 { 
@@ -178,6 +198,12 @@ function Coordinator.run_game(map_path)
         if observation_response.player_result and #observation_response.player_result > 0 then
             break
         end
+
+        --< Agent:
+        agent:_update(Observation.construct_observation(observation_response))
+        
+        --< Agent:
+        agent:on_step()
 
         --< Logic:
         Print.recursive_print(observation_response)
