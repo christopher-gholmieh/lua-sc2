@@ -162,7 +162,7 @@ function Protocol.new(socket, options)
     --< Self:
     local Self = {
         --< Options:
-        options = options or {};
+        options = options or { debug = false };
 
         --< Socket:
         socket = socket;
