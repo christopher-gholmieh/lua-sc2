@@ -181,7 +181,6 @@ function Coordinator.run_game(map_path)
 
         --< Logic:
         Print.recursive_print(observation_response)
-        print("-------------------------------------------------")
     end
 
     return true
