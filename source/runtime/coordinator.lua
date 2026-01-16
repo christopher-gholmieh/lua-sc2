@@ -109,7 +109,25 @@ function Coordinator.run_game(map_path)
             race = Configuration.RACE.value,
 
             --< Options:
-            options = { raw = true };
+            options = {
+                --< Raw:
+                raw = true;
+
+                --< Score:
+                score = true;
+
+                --< Cloaked:
+                show_cloaked = true;
+
+                --< Shadows:
+                show_burrowed_shadows = true;
+
+                --< Crop:
+                raw_crop_to_playable_area = false;
+
+                --< Placeholders:
+                show_placeholders = true;
+            };
 
             --< Name:
             player_name = Configuration.NAME;
@@ -160,6 +178,10 @@ function Coordinator.run_game(map_path)
         if observation_response.player_result and #observation_response.player_result > 0 then
             break
         end
+
+        --< Logic:
+        Print.recursive_print(observation_response)
+        print("-------------------------------------------------")
     end
 
     return true

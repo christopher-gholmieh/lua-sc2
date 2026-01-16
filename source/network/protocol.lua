@@ -9,6 +9,30 @@ local Protocol = {}
 
 --< Functions:
 function Protocol.build_default_codec()
+    --< Functions:
+    local function resolve_repository_root()
+        --< Variables (Assignment):
+        --< Source:
+        local source = debug.getinfo(1, "S").source
+
+        --< Logic:
+        if type(source) == "string" and source:sub(1,1 ) == "@" then
+            --< Variables (Assignment):
+            --< Path:
+            local path = source:sub(2)
+
+            --< Root:
+            local root = path:match("$(.*)[/\\]source[/\\]network[/\\]protocol%.lua$")
+
+            --< Logic:
+            if root and #root > 0 then
+                return root
+            end
+        end
+
+        return "."
+    end
+
     --< Variables (Assignment):
     --< Protobuf:
     local protobuf_success, Protobuf = pcall(require, "pb")
@@ -21,8 +45,64 @@ function Protocol.build_default_codec()
         return nil, "[!] Missing protobuf dependencies: protoc/pb!"
     end
 
+    --< Separator:
+    local separator = package.config:sub(1, 1)
+
+    --< Root:
+    local root = resolve_repository_root()
+
+    --< Directory:
+    local protobuf_directory = root .. separator .. "s2clientprotocol"
+
     --< Protoc:
-    Protoc.include = {"./"}
+    Protoc.include = { "./"; protobuf_directory }
+
+    --< Files:
+    local protobuf_files = {
+        --< Common:
+        "common.proto";
+
+        --< Data:
+        "data.proto";
+
+        --< Debug:
+        "debug.proto";
+
+        --< Error:
+        "error.proto";
+
+        --< Query:
+        "query.proto";
+
+        --< Raw:
+        "raw.proto";
+
+        --< Score:
+        "score.proto";
+
+        --< Spatial:
+        "spatial.proto";
+
+        --< UI:
+        "ui.proto";
+
+        --< API:
+        "sc2api.proto";
+    }
+
+    --< Logic:
+    for _, protobuf_file in ipairs(protobuf_files) do
+        --< Variables (Assignment):
+        --< Path:
+        local path = protobuf_directory .. separator .. protobuf_file
+
+        --< Success:
+        local success, error = pcall(Protoc.loadfile, Protoc, path)
+
+        if not success then
+            return nil, "[!] Failed to load " .. protobuf_file .. ": " .. tostring(error)
+        end
+    end
 
     --< Variables (Assignment):
     --< Success:
