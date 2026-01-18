@@ -41,6 +41,9 @@ function Agent.new()
 		--< Workers:
 		idle_worker_count = 0;
 		workers = nil;
+
+		--< Information:
+		game_information = {};
 	}
 
 	--< Logic:
@@ -88,9 +91,6 @@ function Agent:_update(observation)
 	self.idle_worker_count = observation.idle_worker_count
 	self.workers = Units.new(self.actions)
 
-	--< Information:
-	self.game_information = {};
-
 	--< Internal:
 	self:_populate_units(observation.raw_observation)
 end
@@ -101,6 +101,18 @@ function Agent:_populate_information(raw_information)
 	self.game_information = {
 		--< Location:
 		enemy_start_location = raw_information.game_info.start_raw.start_locations[1];
+
+		--< Name:
+		map_name = raw_information.game_info.map_name;
+
+		--< Size:
+		map_size = {
+			--< Height:
+			height = raw_information.game_info.start_raw.map_size.y;
+
+			--< Width:
+			width = raw_information.game_info.start_raw.map_size.x;
+		}
 	}
 end
 

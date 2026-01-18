@@ -103,7 +103,7 @@ function Coordinator.run_game(map_path, agent)
                     race = Race.TERRAN.value;
 
                     --< Difficulty:
-                    difficulty = Difficulty.CHEAT_INSANE.value
+                    difficulty = Difficulty.VERY_EASY.value
                 }
             }
         }
