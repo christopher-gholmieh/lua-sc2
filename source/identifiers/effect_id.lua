@@ -3,7 +3,7 @@
 
 --< Variables (Assignment):
 --< Utilities:
-local Enumeration = require("source.core.utilities.enumeration")
+local Enumeration = require("source.utilities.enumeration")
 
 --< Enumerations:
 local EFFECT_IDENTIFIER = {

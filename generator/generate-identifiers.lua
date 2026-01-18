@@ -61,7 +61,7 @@ local function process_files()
             "";
             "--< Variables (Assignment):";
             "--< Utilities:";
-            "local Enumeration = require(\"source.core.utilities.enumeration\")";
+            "local Enumeration = require(\"source.utilities.enumeration\")";
             "";
             "--< Enumerations:";
             string.format("local %s = {", dictionary_name);

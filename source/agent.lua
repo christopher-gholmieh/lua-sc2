@@ -4,15 +4,18 @@
 --< Utilities:
 local Print = require("source.utilities.print")
 
+--< Library:
+local Matcher = require("source.library.matcher")
+
 --< Core:
+local Structures = require("source.core.structures")
+local Structure = require("source.core.structure")
+
 local Units = require("source.core.units")
 local Unit = require("source.core.unit")
 
 --< Agent:
 local Agent = {}
-
---< Constants:
-local TERRAN_SCV_UNIT_TYPE = 45
 
 --< Functions:
 function Agent.new()
@@ -38,6 +41,9 @@ function Agent.new()
 		supply_cap = 15;
 		supply = 12;
 
+		--< Townhalls:
+		townhalls = nil;
+
 		--< Workers:
 		idle_worker_count = 0;
 		workers = nil;
@@ -59,7 +65,7 @@ function Agent:on_start()
 end
 
 function Agent:on_step()
-	self.workers:attack(self.game_information.enemy_start_location)
+	self.townhalls:train()
 end
 
 function Agent:on_end()
@@ -86,6 +92,9 @@ function Agent:_update(observation)
 
 	self.supply_cap = observation.supply_cap
 	self.supply = observation.supply
+
+	--< Townhalls:
+	self.townhalls = Structures.new(self.actions)
 
 	--< Workers:
 	self.idle_worker_count = observation.idle_worker_count
@@ -118,9 +127,26 @@ end
 
 function Agent:_populate_units(raw_observation)
 	for _, unit_information in pairs(raw_observation.observation.observation.raw_data.units) do
-		if unit_information.unit_type == TERRAN_SCV_UNIT_TYPE then
-			self.workers:append(Unit.new(unit_information, self.actions))
+		--< Townhalls:
+		if Matcher.is_townhall(unit_information.unit_type) then
+			--< Logic:
+			self.townhalls:append(Structure.new(unit_information, self.actions))
+
+			--< Continue:
+			goto continue
 		end
+
+		--< Worker:
+		if Matcher.is_worker(unit_information.unit_type) then
+			--< Logic:
+			self.workers:append(Unit.new(unit_information, self.actions))
+
+			--< Continue:
+			goto continue
+		end
+
+		--< Continue:
+		::continue::
 	end
 end
 

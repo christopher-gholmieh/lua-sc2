@@ -105,7 +105,10 @@ function Coordinator.run_game(map_path, agent)
                     --< Difficulty:
                     difficulty = Difficulty.VERY_EASY.value
                 }
-            }
+            };
+
+            --< Realtime:
+            realtime = true;
         }
     })
 
