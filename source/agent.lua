@@ -56,7 +56,7 @@ function Agent:on_start()
 end
 
 function Agent:on_step()
-	self.workers:attack({ x = 45.5, y = 12.0 })
+	self.workers:attack(self.game_information.enemy_start_location)
 end
 
 function Agent:on_end()
@@ -88,8 +88,20 @@ function Agent:_update(observation)
 	self.idle_worker_count = observation.idle_worker_count
 	self.workers = Units.new(self.actions)
 
+	--< Information:
+	self.game_information = {};
+
 	--< Internal:
 	self:_populate_units(observation.raw_observation)
+end
+
+function Agent:_populate_information(raw_information)
+	--< Variables (Assignment):
+	--< Information:
+	self.game_information = {
+		--< Location:
+		enemy_start_location = raw_information.game_info.start_raw.start_locations[1];
+	}
 end
 
 function Agent:_populate_units(raw_observation)

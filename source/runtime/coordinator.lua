@@ -163,6 +163,18 @@ function Coordinator.run_game(map_path, agent)
         return false
     end
 
+    --< Information:
+    local information_response = Coordinator.send_and_receive(protocol, {
+        --< Identifier:
+        id = Coordinator.next_identifier();
+
+        --< Inforamtion:
+        game_info = {};
+    })
+
+    --< Initialization:
+    agent:_populate_information(information_response)
+
     --< Logic:
     while true do
         --< Variables (Assignment):
