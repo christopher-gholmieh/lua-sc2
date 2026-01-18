@@ -56,7 +56,7 @@ function Agent:on_start()
 end
 
 function Agent:on_step()
-	self.workers:move({ x = 45.5, y = 12.0 })
+	self.workers:attack({ x = 45.5, y = 12.0 })
 end
 
 function Agent:on_end()

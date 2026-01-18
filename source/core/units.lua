@@ -45,7 +45,7 @@ function Units:append(unit)
     self.collection[unit.tag] = unit;
 end
 
-function Units:attack(...)
+function Units:attack(position)
     --< Variables (Assignment):
     --< Action:
     local action = {
@@ -54,19 +54,19 @@ function Units:attack(...)
             --< Command:
             unit_command = {
                 --< Identifier:
-                ability_id = 2;
+                ability_id = 3674;
 
                 --< Tags:
                 unit_tags = {};
 
                 --< Position:
-                target_world_space_pos = { x = 45.5, y = 12.0 };
+                target_world_space_pos = { x = position.x, y = position.y };
             }
         }
     }
 
     --< Logic:
-    for tag, unit in pairs(self.collection) do
+    for tag, _ in pairs(self.collection) do
         table.insert(action.action_raw.unit_command.unit_tags, tag)
     end
 
@@ -76,7 +76,7 @@ function Units:attack(...)
     end
 
     --< Action:
-    return action
+    table.insert(self.actions, action)
 end
 
 function Units:move(position)
