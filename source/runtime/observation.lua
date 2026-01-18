@@ -30,6 +30,9 @@ function Observation.construct_observation(observation_response)
 
         --< Workers:
         idle_worker_count = information.player_common.idle_worker_count;
+
+        --< Observation:
+        raw_observation = observation_response;
     }
 
     --< Self:

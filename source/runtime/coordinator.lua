@@ -74,7 +74,7 @@ function Coordinator.run_game(map_path, agent)
     assert(socket:connect())
 
     --< Protocol:
-    local protocol = Protocol.new(socket, { debug = true })
+    local protocol = Protocol.new(socket, { debug = false })
 
     --< Creation:
     local creation_response = Coordinator.send_and_receive(protocol, {
@@ -206,7 +206,20 @@ function Coordinator.run_game(map_path, agent)
         agent:on_step()
 
         --< Logic:
-        Print.recursive_print(observation_response)
+        if #agent.actions > 0 then
+            --< Variables (Assignment):
+            --< Action:
+            local action_response = Coordinator.send_and_receive(protocol, {
+                --< Identifier:
+                id = Coordinator.next_identifier();
+
+                --< Action:
+                action = {
+                    --< Actions:
+                    actions = agent.actions;
+                }
+            })
+        end
     end
 
     return true
