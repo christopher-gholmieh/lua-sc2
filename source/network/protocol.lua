@@ -33,6 +33,89 @@ function Protocol.build_default_codec()
         return "."
     end
 
+    local function mkdir_path(path)
+        if package.config:sub(1, 1) == "\\" then
+            os.execute('mkdir "' .. path .. '" >nul 2>nul')
+        else
+            os.execute('mkdir -p "' .. path .. '" >/dev/null 2>&1')
+        end
+    end
+
+    local function join_path(base, name, separator)
+        if base:sub(-1) == "/" or base:sub(-1) == "\\" then
+            return base .. name
+        end
+
+        return base .. separator .. name
+    end
+
+    local function get_temporary_base()
+        --< Variables (Assignment):
+        --< Candidates:
+        local candidates = { os.getenv("TMPDIR"), os.getenv("TEMP"), os.getenv("TMP") }
+
+        --< Logic:
+        for _, candidate in ipairs(candidates) do
+            if type(candidate) == "string" and #candidate > 0 then
+                return candidate
+            end
+        end
+
+        return "."
+    end
+
+    local function write_bundle_protobufs(separator)
+        --< Variables (Assignment):
+        --< Assets:
+        local assets = rawget(_G, "__BUNDLE_ASSETS")
+
+        if not assets then
+            return nil
+        end
+
+        if assets.__bundle_protobuf_root then
+            return assets.__bundle_protobuf_root
+        end
+
+        --< Timestamp:
+        local temporary_timestamp = tostring(os.time()) .. "-" .. tostring(os.clock()):gsub("%.", "")
+
+        --< Root:
+        local temporary_root = join_path(get_temporary_base(), "lua-sc2-bundle-" .. temporary_timestamp, separator)
+        
+        --< Logic:
+        mkdir_path(temporary_root)
+
+        for name, content in pairs(assets) do
+            if type(name) == "string" and type(content) == "string" and name:match("^s2clientprotocol/") then
+                --< Variables (Assignment):
+                --< Output:
+                local output_path = temporary_root .. separator .. name:gsub("/", separator)
+
+                --< Directory:
+                local directory = output_path:match("^(.*)[/\\][^/\\]+$")
+
+                if directory then
+                    mkdir_path(directory)
+                end
+
+                --< File:
+                local file = io.open(output_path, "wb")
+
+                if file then
+                    file:write(content)
+                    file:close()
+                end
+
+            end
+        end
+
+        assets.__bundle_protobuf_root = temporary_root 
+
+        --< Root:
+        return temporary_root 
+    end
+
     --< Variables (Assignment):
     --< Protobuf:
     local protobuf_success, Protobuf = pcall(require, "pb")
@@ -51,11 +134,17 @@ function Protocol.build_default_codec()
     --< Root:
     local root = resolve_repository_root()
 
+    --< Bundle:
+    local bundle_root = write_bundle_protobufs(separator)
+
+    --< Protobuf:
+    local protobuf_root = bundle_root or root
+
     --< Directory:
-    local protobuf_directory = root .. separator .. "s2clientprotocol"
+    local protobuf_directory = protobuf_root .. separator .. "s2clientprotocol"
 
     --< Protoc:
-    Protoc.include = { "./"; protobuf_directory }
+    Protoc.include = { protobuf_root; protobuf_directory }
 
     --< Files:
     local protobuf_files = {
@@ -106,7 +195,7 @@ function Protocol.build_default_codec()
 
     --< Variables (Assignment):
     --< Success:
-    local success, error = pcall(Protoc.loadfile, Protoc, "s2clientprotocol/sc2api.proto")
+    local success, error = pcall(Protoc.loadfile, Protoc, protobuf_directory .. separator .. "sc2api.proto")
 
     if not success then
         return nil, "[!] Failed to load s2clientprotocol/sc2api.proto: " .. tostring(error)
