@@ -10,6 +10,9 @@ local Player = require("source.enumerations.player")
 local Status = require("source.enumerations.status")
 local Race = require("source.enumerations.race")
 
+--< Filesystem:
+local Filesystem = require("lfs")
+
 --< Runtime:
 local Observation = require("source.runtime.observation")
 
@@ -18,6 +21,7 @@ local Protocol = require("source.network.protocol")
 local Socket = require("source.network.socket")
 
 --< Utilities:
+local Executable = require("source.utilities.executable")
 local Logger = require("source.utilities.logger")
 local Print = require("source.utilities.print")
 
@@ -45,18 +49,22 @@ function Coordinator.next_identifier()
     return Coordinator.identifier - 1
 end
 
-function Coordinator.run_game(map_path, agent)
+function Coordinator.run_game(map_name, agent)
     --< Validation:
-    if not map_path then
+    if not map_name then
         --< Logger:
-        Logger.log_error("[!] Map path supplied to run_game is nil!")
+        Logger.log_error("[!] Map name supplied to run_game is nil!")
 
         --< Logic:
         return
     end
 
+    if not map_name:find(".SC2Map") then
+        map_name = map_name .. ".SC2Map"
+    end
+
     if not agent then
-         --< Logger:
+        --< Logger:
         Logger.log_error("[!] Agent supplied to run_game is nil!")
 
         --< Logic:
@@ -64,6 +72,25 @@ function Coordinator.run_game(map_path, agent)
     end
 
     --< Variables (Assignment):
+    --< Path:
+    local map_path = Executable.create_map_path(map_name)
+
+    if not map_path then
+        --< Logger:
+        Logger.log_error("[!] Failed to construct StarCraft II map path with map name: " .. map_name .. "!")
+
+        --< Logic:
+        return
+    end
+
+    if Filesystem.attributes(map_path) == nil then
+        --< Logger:
+        Logger.log_error("[!] " .. map_path .. " does not exist!")
+
+        --< Logic:
+        return
+    end
+
     --< Socket:
     local socket = Socket.new()
 

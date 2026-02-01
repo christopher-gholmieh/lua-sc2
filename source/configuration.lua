@@ -13,7 +13,6 @@ local Configuration = {
 	--< Name:
 	NAME = "Bot";
 
-
 	--< Network:
 	--< Host:
 	HOST = "127.0.0.1";

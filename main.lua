@@ -9,4 +9,4 @@ local Agent = require("source.agent")
 
 
 --< Program:
-Coordinator.run_game("C:/Program Files (x86)/StarCraft II/Maps/AcropolisAIE.SC2Map", Agent.new())
+Coordinator.run_game("AcropolisAIE", Agent.new())
